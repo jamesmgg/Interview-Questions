@@ -9,7 +9,7 @@ import mostWaterSquares.WaterSquaresSolver.Pair;
 
 import org.junit.Test;
 
-public class Tests {
+public class WaterSquaresSolverTest {
 
 	@Test
 	public void testFindArea_1() {
