@@ -56,31 +56,65 @@ public class WaterSquaresSolver {
 	}
 
 	// TODO: Fix method, and break it apart.
-	private static ArrayList<Pair> findMaximumPairs(boolean[][] arr) {
+    static ArrayList<Pair> findMaximumPairs(boolean[][] arr) {
 		ArrayList<Pair> list = new ArrayList<Pair>();
-		Point prev = null, next = null;
-		for (int i = 1; i < arr[0].length - 1; i++) {
-			int prevHeight = findHeight(arr, i);
-			int nextHeight = findHeight(arr, i + 1);
-			// First drop found.
-			if (nextHeight < prevHeight) {
-				prev = new Point(i, prevHeight);
-				for (int j = i + 2; j < arr[0].length; j++) {
-					nextHeight = findHeight(arr, j);
-					if (nextHeight >= 1) {
-						next = new Point(i, nextHeight);
-						list.add(new Pair(prev, next));
-						i = j;
-					}
+		int col = 0;
+		int cliffHeight = findHeight(arr, 0);
+		Point cliffPoint = new Point(0, cliffHeight);
+		while (col < arr[0].length) {
+			// While height is decreasing.
+			col = isDropping(arr, col);
+			
+			while(isRising(arr, col)) {
+				int localCliffHeight = findHeight(arr, col);
+				Point localCliffPoint = new Point(col, localCliffHeight);
+				list.add(new Pair(cliffPoint, localCliffPoint));
+				if (localCliffHeight >= cliffHeight) {
+					cliffHeight = localCliffHeight;
+					cliffPoint = localCliffPoint;
 				}
 			}
 		}
-		return null;
+//		Point prev = null, next = null;
+//		for (int i = 0; i < arr[0].length - 1; i++) {
+//			int prevHeight = findHeight(arr, i);
+//			int nextHeight = findHeight(arr, i + 1);
+//			// First drop found.
+//			if (nextHeight < prevHeight) {
+//				prev = new Point(i, prevHeight);
+//				while (i < arr[0].length) {
+//					i++;
+//				}
+//				for (int j = i + 2; j < arr[0].length; j++) {
+//					nextHeight = findHeight(arr, j);
+//					if (nextHeight >= 1) {
+//						next = new Point(i, nextHeight);
+//						list.add(new Pair(prev, next));
+//						i = j;
+//					}
+//				}
+		return list;
+	}
+		static int isDropping(boolean[][] arr, int col) {
+		 while(col < arr[0].length - 1) {
+			 // Iterate through array until it is rising.
+			 if (findHeight(arr, col) < findHeight(arr, col + 1)) {
+				 col++;
+				 break;
+			 }
+			 col++;
+		 }
+		return col;
 	}
 
-	private static int findHeight(boolean[][] arr, int i) {
+		private static boolean isRising(boolean[][] arr, int col) {
+		// TODO Auto-generated method stub
+		return false;
+		}
+
+	static int findHeight(boolean[][] arr, int i) {
 		int count = 0;
-		for (int j = arr.length - 1; j >= 0; j++) {
+		for (int j = arr.length - 1; j >= 0; j--) {
 			if (!arr[j][i]) {
 				break;
 			}
