@@ -2,15 +2,20 @@ package mostWaterSquares;
 
 
 /*
- * Given an array where an occupied element in an array is considered land,
- * find the largest area between two land point's that can contain water.
+ * Given an array where a 1 is considered land, and a 0 is considered empty space,
+ * find the largest volume of water contained between two points of land.
  * 
  * Ex: 
- * X = land, . = water that is contained in valleys.
+ * Given array:
+ * 1100000000000
+ * 1100000010000
+ * 1100111010001 
  * 
- * XX
- * XX......X             Answer will be 8
- * XX..XXX.X...X     
+ * where 1 = land, 0 = empty space, . = water
+ * 
+ * 1100000000000
+ * 11......10000             Answer will be 8
+ * 11..111.1...1    
  */
 public class WaterSquaresSolver {
 
