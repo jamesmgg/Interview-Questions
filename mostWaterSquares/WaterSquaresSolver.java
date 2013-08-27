@@ -1,7 +1,5 @@
 package mostWaterSquares;
 
-import java.awt.Point;
-import java.util.ArrayList;
 
 /*
  * Given an array where an occupied element in an array is considered land,
@@ -11,106 +9,75 @@ import java.util.ArrayList;
  * X = land, . = water that is contained in valleys.
  * 
  * XX
- * XX......X             Answer will be 9
+ * XX......X             Answer will be 8
  * XX..XXX.X...X     
  */
 public class WaterSquaresSolver {
 
-	public static class Pair {
-		public Point first, second;
-
-		public Pair(Point first, Point second) {
-			this.first = first;
-			this.second = second;
-		}
-	}
-
-	public static int findLargestArea(boolean[][] arr) {
-		// Find local maximums
-		ArrayList<Pair> pairs = findMaximumPairs(arr);
-		return findLargestArea(pairs, arr);
-	}
-
-	static int findLargestArea(ArrayList<Pair> pairs, boolean[][] arr) {
-		int max = -1;
-		for (Pair pair : pairs) {
-			int result = findArea(pair, arr);
-			if (result > max) {
-				max = result;
-			}
-		}
-		return max;
-	}
-
-	static int findArea(Pair pair, boolean[][] arr) {
-		int area = 0;
-		int smallestHeight = Math.min(pair.first.y, pair.second.y);
-		for (int row = arr.length - smallestHeight; row < arr.length; row++) {
-			for (int col = pair.first.x + 1; col < pair.second.x; col++) {
-				if (!arr[row][col]) {
-					area++;
+	static int findLargestVolumeWater(boolean [][] arr) {
+		int[] heightArr = getHeightArray(arr);
+		int maxVolume = 0;
+		for (int col1 = 0; col1 < heightArr.length; col1++) {
+			for (int col2 = col1 + 1; col2 < heightArr.length; col2++) {
+				if (heightArr[col2] >= heightArr[col1]) {
+					int row1 = arr.length - heightArr[col1];
+					int row2 = arr.length - heightArr[col2];
+					int volume = findVolume(arr, col1, col2, row1, row2);
+					// Max volume found for this height.
+					if (volume > maxVolume) {
+						maxVolume = volume;
+						break;
+					}
 				}
 			}
 		}
-		return area;
-	}
-
-	// TODO: Fix method, and break it apart.
-    static ArrayList<Pair> findMaximumPairs(boolean[][] arr) {
-		ArrayList<Pair> list = new ArrayList<Pair>();
-		int col = 0;
-		int cliffHeight = findHeight(arr, 0);
-		Point cliffPoint = new Point(0, cliffHeight);
-		while (col < arr[0].length) {
-			// While height is decreasing.
-			col = isDropping(arr, col);
-			
-			while(isRising(arr, col)) {
-				int localCliffHeight = findHeight(arr, col);
-				Point localCliffPoint = new Point(col, localCliffHeight);
-				list.add(new Pair(cliffPoint, localCliffPoint));
-				if (localCliffHeight >= cliffHeight) {
-					cliffHeight = localCliffHeight;
-					cliffPoint = localCliffPoint;
+		
+		for (int col1 = heightArr.length - 1; col1 >= 0; col1--) {
+			for (int col2 = col1 - 1; col2 >= 0; col2--) {
+				if (heightArr[col2] >= heightArr[col1]) {
+					int row1 = arr.length - heightArr[col1];
+					int row2 = arr.length - heightArr[col2];
+					int volume = findVolume(arr, col1, col2, row1, row2);
+					// Max volume found for this height.
+					if (volume > maxVolume) {
+						maxVolume = volume;
+						break;
+					}
 				}
 			}
 		}
-//		Point prev = null, next = null;
-//		for (int i = 0; i < arr[0].length - 1; i++) {
-//			int prevHeight = findHeight(arr, i);
-//			int nextHeight = findHeight(arr, i + 1);
-//			// First drop found.
-//			if (nextHeight < prevHeight) {
-//				prev = new Point(i, prevHeight);
-//				while (i < arr[0].length) {
-//					i++;
-//				}
-//				for (int j = i + 2; j < arr[0].length; j++) {
-//					nextHeight = findHeight(arr, j);
-//					if (nextHeight >= 1) {
-//						next = new Point(i, nextHeight);
-//						list.add(new Pair(prev, next));
-//						i = j;
-//					}
-//				}
-		return list;
-	}
-		static int isDropping(boolean[][] arr, int col) {
-		 while(col < arr[0].length - 1) {
-			 // Iterate through array until it is rising.
-			 if (findHeight(arr, col) < findHeight(arr, col + 1)) {
-				 col++;
-				 break;
-			 }
-			 col++;
-		 }
-		return col;
+		return maxVolume;
 	}
 
-		private static boolean isRising(boolean[][] arr, int col) {
-		// TODO Auto-generated method stub
-		return false;
+	static int findVolume(boolean[][] arr, int col1, int col2, int row1, int row2) {
+		int volume = 0;
+		int minCol = col1;
+		int maxCol = col2;
+		int minRow = row1;
+		if (col2 < col1) {
+			minCol = col2;
+			maxCol = col1;
 		}
+		if (row2 > row1) {
+			minRow = row2;
+		}
+		for (; minCol <= maxCol; minCol++) {
+			for (int j = minRow; j < arr.length; j++) {
+				if (!arr[j][minCol]) {
+					volume++;
+				}
+			}
+		}
+		return volume;
+	}
+
+	private static int[] getHeightArray(boolean[][] arr) {
+		int[] heightArray = new int[arr[0].length];
+		for (int i = 0; i < arr[0].length; i++) {
+			heightArray[i] = findHeight(arr, i);
+		}
+		return heightArray;
+	}
 
 	static int findHeight(boolean[][] arr, int i) {
 		int count = 0;
