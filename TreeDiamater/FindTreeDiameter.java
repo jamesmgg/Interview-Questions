@@ -1,4 +1,4 @@
-package TreeDiamater;
+package treeDiamater;
 
 public class FindTreeDiameter {
 	public static class Node {

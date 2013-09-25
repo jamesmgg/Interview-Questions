@@ -1,4 +1,4 @@
-package TreeDiamater;
+package treeDiamater;
 
 import static org.junit.Assert.*;
 

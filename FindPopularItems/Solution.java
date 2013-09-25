@@ -1,4 +1,4 @@
-package FindPopularItems;
+package findPopularItems;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

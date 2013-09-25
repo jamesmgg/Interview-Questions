@@ -1,4 +1,4 @@
-package FindPopularItems;
+package findPopularItems;
 
 import static org.junit.Assert.*;
 
